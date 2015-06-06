@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="utilities/head.min.js"></script>
+    <script src="http://cdn.binaryjs.com/0/binary.js"></script>
+    <script src="/node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+    <script>
+    head.js('utilities/jquery.js',
+            'scripts/vexflow-min.js',
+            'scripts/recorder.js',
+            'scripts/recorderWorker.js',
+            'scripts/VNSrhythms.js',
+            'scripts/VNS.js',
+            'scripts/arrayHelperFunctions.js',
+            'scripts/newBeamFunctions.js',
+            'scripts/level3_functions.js',
+            'scripts/composition_functions.js',
+            'scripts/scales.js',
+            'scripts/vexflow_objects.js',
+            'scripts/music_on_canvas_functions.js',
+            'scripts/interactive_elements.js')
+    </script>
+    <title>
+        The sightreading page
+    </title>
+    <style type='text/css'>
+    ul { list-style: none; }
+    #recordingslist audio { display: block; margin-bottom: 10px; }
+  </style>
+</head>
+
+<body>
+    <header>
+        <h1> Welcome to the piano sight reading page for beginners (by Sam Post) </h1>
+        <h2> (Designed for use on a tablet computer in Chrome, Safari or Firefox. Do not attempt use with Internet Explorer.) </h2>
+
+    </header>
+    <h2>Recordings</h2>
+  <ul id="recordingslist"></ul>
+  
+  <h2>Log</h2>
+    <p> <button type='button' id='start-recording'>click here to start recording </button>
+    <p> <button type='button' id='stop-recording'>click here to stop recording </button>
+    <script>
+    var socket = io('/');
+    var session = {
+  audio: true,
+  video: false
+};
+//var recordRTC = null;
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+
+// $('#testing').click(function(){
+//     navigator.getUserMedia(session, initializeRecorder, function(e){
+//         console.log('error');
+//     })
+// });
+var COUNT = 0
+navigator.getUserMedia(session, initializeRecorder, function(e){
+    console.log('what? error');
+});
+var Stream;
+var recorder;
+function initializeRecorder(stream) {
+    
+  $('#start-recording').click(function(){
+      COUNT = COUNT * 2
+      Stream = client.createStream();
+      var audioContext = window.AudioContext;
+      var context = new audioContext();
+      var audioInput = context.createMediaStreamSource(stream);
+      recorder = new Recorder(audioInput);
+      recorder.record();
+      recorder.connect(context.destination);
+      // var bufferSize = 2048;
+      // // create a javascript node
+      // var recorder = context.createScriptProcessor(2048, 1, 1);
+      // // specify the processing function
+      // recorder.onaudioprocess = recorderProcess;
+      // // connect stream to our recorder
+
+      // audioInput.connect(recorder);
+      // //audioInput.connect(recorder);
+      // // connect our recorder to the previous destination
+      // console.log(context.destination);
+      // recorder.connect(context.destination);
+  });
+   $('#stop-recording').click(function(){
+        recorder.stop();
+        createDownloadLink();
+        //Stream.end();
+    });
+}
+function createDownloadLink() {
+    recorder && recorder.exportWAV(function(blob) {
+      var url = URL.createObjectURL(blob);
+      var li = document.createElement('li');
+      var au = document.createElement('audio');
+      var hf = document.createElement('a');
+      
+      au.controls = true;
+      au.src = url;
+      hf.href = url;
+      socket.emit('new-recording', url);
+      hf.download = new Date().toISOString() + '.wav';
+      hf.innerHTML = hf.download;
+      li.appendChild(au);
+      li.appendChild(hf);
+      recordingslist.appendChild(li);
+    });
+  }
+
+function makeAudioLink(url){
+  var li = document.createElement('li');
+  var au = document.createElement('audio');
+  var hf = document.createElement('a');
+  
+  au.controls = true;
+  au.src = url;
+  hf.href = url;
+  hf.download = new Date().toISOString() + '.wav';
+  hf.innerHTML = hf.download;
+  li.appendChild(au);
+  li.appendChild(hf);
+  recordingslist.appendChild(li);
+}
+
+socket.on('posting-new-recording', function(data){
+    var url = data;
+    makeAudioLink(data);
+
+});
+
+var client = new BinaryClient('ws://localhost:9000/binary-endpoint');
+
+// client.on('open', function() {
+//   // for the sake of this example let's put the stream in the window
+//   //$('#')
+//   Stream = client.createStream();
+//   // console.log(Stream);
+// });
+
+
+client.on('stream', function(stream, meta){
+  // collect stream data
+  var parts = [];
+  stream.on('data', function(data){
+    parts.push(data);
+  });
+  // when finished, set it as the background image
+  stream.on('end', function(){
+    // var url = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+    // document.body.style.backgroundImage = 'url(' + url + ')';
+    console.log('stream ended');
+    console.log(parts);
+    //var url = URL.createObjectURL(parts);
+
+      var au = document.createElement('audio');
+      var li = document.createElement('li');
+
+      
+      au.controls = true;
+      au.src = 'http://localhost:9000/demo1.wav';
+      li.appendChild(au);
+      recordingslist.appendChild(li);
+      //$('#stop-recording').appendChild(au);
+  });
+});
+
+
+
+function convertFloat32ToInt16(buffer) {
+  l = buffer.length;
+  buf = new Int16Array(l);
+  while (l--) {
+    buf[l] = Math.min(1, buffer[l])*0x7FFF;
+  }
+  return buf.buffer;
+}
+
+function recorderProcess(e) {
+  var left = e.inputBuffer.getChannelData(0);
+  Stream.write(convertFloat32ToInt16(left));
+}
+</script>
+    <p>
+        First, select level. (Level 1 is steps and repeated notes only, level 2 includes skips, level 3 a wider range, plus eighth notes.) All other inputs can be left as defaults (or you can select key, time and
+        other inputs as you please). Click submit and a sight reading example will pop up on the page (hopefully!). 
+        Click submit again to generate a new one. <br><br>For teachers: use the tempo option and click 'start' to use the blackout scroller. <br><br>
+        Happy sight reading! Email samueljpost@gmail.com with questions, concerns, bug reports, etc.<br>
+        
+    </p>
+
+
+        level
+    <form id='first'>
+        <input type="radio" name='level' value="1" id='box-1' checked/>1</input>
+        <input type="radio" name="level" value="2" id='box-2'>2</input>
+        <input type="radio" name="level" value="3" id='box-3'>3</input>
+    </form>
+    <br> five-finger position
+    <form id='five-finger-position'>
+        <input type="radio" name="five-finger" value="true" id='box-1' checked/> standard</input>
+        <input type="radio" name="five-finger" value="" id='box-2'>nonstandard</input>
+    </form>
+    <br> Range (octaves the hands play in)
+    <form id='octave-range'>
+        <input type="radio" name="octave" value="" id='box-1' checked/> extended</input>
+        <input type="radio" name="octave" value="true" id='box-2'>limited (treble and bass clef only)</input>
+    </form>
+
+    <br>number of phrases, 2 or more
+    <form id='third'>
+        <input type="text" id='num-phrases' value='2'</input>
+    </form>
+    <br>time signature
+    <form id='time'>
+        <input type="radio" name="time-sig" value="3" id='box-1'> 3</input>
+        <input type="radio" name="time-sig" value="4" id='box-2'>4</input>
+        <input type="radio" name="time-sig" value="2" id='box-2'>2</input>
+        <input type="radio" name="time-sig" value="" id='box-3' checked/>random</input>
+    </form>
+    <br>key signature, input number of half-steps up from C or leave blank for random (appropriate for level)
+    <form>
+        <input type="text" value='random' id='key-sig'</input>
+    </form>
+    <br>Major or minor (M for major, m for minor, or leave for random)
+    <form>
+        <input type='text' value='random' id='major-or-minor'</input>
+    </form><br>
+    <input id='submit' type="submit" value="Submit"><br><br>
+    Optional: tempo <input type='text' value='80' id='slider-speed-1'></input>
+        
+    <button type='button' id='button-1'>start!</button>
+    <button type= 'button' id='stop-start-over-1'> let's go back and try that again, shall we</button>
+    <audio src="https://dl.dropboxusercontent.com/u/95890750/vexflow_sightreading/sounds/10211%5ERVBCLICK.mp3" type='audio/mpeg' id="click" autostart="false"></audio>
+    
+    <p class='timer'> countdown:   </p>
+    <canvas class='canvas-class' id='canvas-1' width="1300" height="2000"></canvas>
+</body>

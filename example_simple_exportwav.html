@@ -52,6 +52,15 @@
     __log('Recording...');
   }
 
+  function startRec(){
+    recorder && recorder.record();
+  }
+
+  function stopRec(){
+    recorder && recorder.stop();
+    createDownloadLink();
+  }
+
   function stopRecording(button) {
     recorder && recorder.stop();
     button.disabled = true;
@@ -59,12 +68,14 @@
     __log('Stopped recording.');
     
     // create WAV download link using audio data blob
+
     createDownloadLink();
     
     recorder.clear();
   }
 
   function createDownloadLink() {
+    console.log('creating download link');
     recorder && recorder.exportWAV(function(blob) {
       var url = URL.createObjectURL(blob);
       var li = document.createElement('li');
@@ -82,7 +93,7 @@
     });
   }
 
-  window.onload = function init() {
+function init() {
     try {
       // webkit shim
       window.AudioContext = window.AudioContext || window.webkitAudioContext;

@@ -8,96 +8,24 @@ var io = require('socket.io')(server);
 //var dl = require('delivery');
 
 
+
 io.on('connection', function(socket){
     console.log('client connected');
-    var delivery = dl.listen(socket);
-    delivery.on('receive.start',function(filePackage){
-  //console.log(filePackage.name);
-  console.log(filePackage.size);
-  console.log(filePackage.data);
-  // console.log(filePackage.mimeType());
-  //console.log(filePackage.isText());
-});
-    delivery.on('receive.success',function(file){
- 
-    console.log(file);
-});
     socket.on('blob', function(blob){
-        // console.log('blob received');
-        // console.log(blob.length);
-        // console.log(typeof(blob));
-        var url = 'test.wav';
+        var url = getNewUrl(recordings);
         fs.writeFile(url, blob);
+        getRecordingPages(recordings);
         socket.broadcast.emit('new-recording', url);
-        // forEachIn(blob, function(prop, val){
-        //     console.log(prop);
-        //     console.log(val);
-        // });
-        // var stream = WaveStream('/test.wav', 44100);
-        // stream.write(blob);
-        // stream.end();
     });
 });
 
-function forEachIn(object, func) {
-    for (var property in object) {
-        if (object.hasOwnProperty(property))
-            func(property, object[property])
-    }
+function getNewUrl(recordings, socket){
+    var len = recordings.length;
+    var str = 'test' + String(len + 1);
+    var url = str + '.wav';
+    recordings.push(url);
+    return url;
 }
-    // socket.on('sightreading-example', function(data){
-    //     //console.log('data received?');
-    // });
-    // socket.on('new-recording', function(data){
-    //     socket.broadcast.emit('posting-new-recording', data);
-    // });
-
-// });
-
-// ss(io).on('file', function(stream){
-//     console.log('receiving file');
-//     fs.createReadStream('/test.wav').pip(stream)
-// });
-
-
-// var binaryserver = new BinaryServer({server: server, path: '/binary-endpoint'});
-
-// COUNT = 0;
-// binaryserver.on('connection', function(client){
-//     var fileWriter = null;
-
-//     client.on('stream', function(stream, meta) {
-//         console.log(COUNT);
-//           COUNT += 1
-//           var fileWriter = new wav.FileWriter('demo1.wav', {
-//             channels: 1,
-//             sampleRate: 41400,
-//             bitDepth: 16
-//           });
-//           stream.pipe(fileWriter);
-//           stream.on('end', function() {
-//             fileWriter.end();
-//           });
-//         for(var id in binaryserver.clients){
-//       if(binaryserver.clients.hasOwnProperty(id)){
-//         var otherClient = binaryserver.clients[id];
-//         if(otherClient != client){
-//           var send = otherClient.createStream(meta);
-//           stream.pipe(send);
-//         }
-//       }
-//     }
-//         });
-
-//         client.on('close', function() {
-//           if (fileWriter != null) {
-//             fileWriter.end();
-//           }
-//         }); 
-
-// });
-
-
 
 function appGet(urlPath, fileExtension){
     app.get(urlPath, function(req, res){
@@ -109,7 +37,15 @@ function appGet(urlPath, fileExtension){
     });
 }
 
-scripts = ['utilities/head.min.js', 'utilities/jquery.js', 'scripts/vexflow-min.js',
+var recordings = [];
+
+function getRecordingPages(recordings){
+    recordings.forEach(function(recordingPage){
+        appGet('/' + recordingPage, '/' + recordingPage);
+    });
+}
+
+var scripts = ['utilities/head.min.js', 'utilities/jquery.js', 'scripts/vexflow-min.js',
             'scripts/recorder.js',
             'scripts/recorderWorker.js',
             'scripts/VNSrhythms.js',
@@ -123,16 +59,13 @@ scripts = ['utilities/head.min.js', 'utilities/jquery.js', 'scripts/vexflow-min.
             'scripts/vexflow_objects.js',
             'scripts/music_on_canvas_functions.js',
             'scripts/interactive_elements.js',
-            'node_modules/socket.io/node_modules/socket.io-client/socket.io.js',
-            'node_modules/socket.io-stream/socket.io-stream.js',
-            'node_modules/delivery/lib/client/delivery.js',
-            'upload.php',
-            'demo1.wav',
-            'test.wav'];
+            'node_modules/socket.io/node_modules/socket.io-client/socket.io.js'];
 
 scripts.forEach(function(script){
     appGet('/' + script, '/' + script);
 });
+
+
 
 appGet('/', '/home.html');
 

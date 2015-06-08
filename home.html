@@ -2,7 +2,6 @@
 <html>
 <head>
     <script src="utilities/head.min.js"></script>
-    <script src='/node_modules/delivery/lib/client/delivery.js'></script>
     <script src="/node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
     <script>
     head.js('utilities/jquery.js',
@@ -87,75 +86,20 @@ function initializeRecorder(stream) {
   });
    $('#stop-recording').click(function(){
         recorder.stop();
+        recorder && recorder.exportWAV(function(blob){
+            socket.emit('blob', blob);
+        });
         createDownloadLink();
-        //Stream.end();
     });
 }
 
 
-function uploadBlob(blob){
-    // create a blob here for testing
-    //var blob = new Blob(["i am a blob"]);
-    //var blob = yourAudioBlobCapturedFromWebAudioAPI;// for example   
-    var reader = new FileReader();
-    // this function is triggered once a call to readAsDataURL returns
-    reader.onload = function(event){
-        var fd = new FormData();
-        fd.append('fname', 'test.txt');
-        fd.append('data', event.target.result);
-        $.ajax({
-            type: 'POST',
-            url: 'upload.php',
-            data: fd,
-            processData: false,
-            contentType: false
-        }).done(function(data) {
-            // print the output from the upload.php script
-            console.log(data);
-        });
-    };      
-    // trigger the read from the reader...
-    reader.readAsDataURL(blob);
-
-}
 
 function createDownloadLink() {
     recorder && recorder.exportWAV(function(blob) {
         //var url = (window.URL || window.webkitURL).createObjectURL(blob);
       //console.log(url);
       socket.emit('blob', blob);
-      //delivery.send(blob);
-
-      // var filename = 'test.wav';
-      // var data = new FormData();
-      // data.append('file', blob);
-
-      // $.ajax({
-      //   url :  "upload.php",
-      //   type: 'POST',
-      //   data: data,
-      //   contentType: false,
-      //   processData: false,
-      //   success: function(data) {
-      //     alert("boa!");
-      //   },    
-      //   error: function() {
-      //     alert("not so boa!");
-      //   }
-      //});
-        //uploadBlob(blob);
-//       var fd = new FormData();
-// fd.append('fname', 'test.wav');
-// fd.append('data', blob);
-// $.ajax({
-//     type: 'POST',
-//     url: '/upload.php',
-//     data: fd,
-//     processData: false,
-//     contentType: false
-// }).done(function(data) {
-//        console.log(data);
-// });
       var url = URL.createObjectURL(blob);
       var li = document.createElement('li');
       var au = document.createElement('audio');
@@ -164,10 +108,6 @@ function createDownloadLink() {
       au.controls = true;
       au.src = url;
       hf.href = url;
-      // var stream = ss.createStream();
-      // ss(socket).emit('file', stream, {size: blob.size})
-      // ss.createBlobReadStream(blob).pipe(stream);
-      //socket.emit('new-recording', url);
       hf.download = new Date().toISOString() + '.wav';
       hf.innerHTML = hf.download;
       li.appendChild(au);
@@ -176,84 +116,27 @@ function createDownloadLink() {
     });
   }
 
-function makeAudioLink(url){
-  var li = document.createElement('li');
-  var au = document.createElement('audio');
-  var hf = document.createElement('a');
+// function makeAudioLink(url){
+//   var li = document.createElement('li');
+//   var au = document.createElement('audio');
+//   var hf = document.createElement('a');
   
-  au.controls = true;
-  au.src = url;
-  hf.href = url;
-  hf.download = new Date().toISOString() + '.wav';
-  hf.innerHTML = hf.download;
-  li.appendChild(au);
-  li.appendChild(hf);
-  recordingslist.appendChild(li);
-}
-
-socket.on('new-recording', function(url){
-    //var url = data;
-    makeAudioLink(url);    
-
-});
-
-var delivery;
-socket.on('connect', function(){
-    delivery = new Delivery(socket);
-
-    });
-
-//var client = new BinaryClient('ws://localhost:9000/binary-endpoint');
-
-// client.on('open', function() {
-//   // for the sake of this example let's put the stream in the window
-//   //$('#')
-//   Stream = client.createStream();
-//   // console.log(Stream);
-// });
-
-
-// client.on('stream', function(stream, meta){
-//   // collect stream data
-//   var parts = [];
-//   stream.on('data', function(data){
-//     parts.push(data);
-//   });
-//   // when finished, set it as the background image
-//   stream.on('end', function(){
-//     // var url = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
-//     // document.body.style.backgroundImage = 'url(' + url + ')';
-//     console.log('stream ended');
-//     console.log(parts);
-//     //var url = URL.createObjectURL(parts);
-
-//       var au = document.createElement('audio');
-//       var li = document.createElement('li');
-
-      
-//       au.controls = true;
-//       au.src = 'http://localhost:9000/demo1.wav';
-//       li.appendChild(au);
-//       recordingslist.appendChild(li);
-//       //$('#stop-recording').appendChild(au);
-//   });
-// });
-
-
-
-// function convertFloat32ToInt16(buffer) {
-//   l = buffer.length;
-//   buf = new Int16Array(l);
-//   while (l--) {
-//     buf[l] = Math.min(1, buffer[l])*0x7FFF;
-//   }
-//   return buf.buffer;
+//   au.controls = true;
+//   au.src = url;
+//   hf.href = url;
+//   hf.download = new Date().toISOString() + '.wav';
+//   hf.innerHTML = hf.download;
+//   li.appendChild(au);
+//   li.appendChild(hf);
+//   recordingslist.appendChild(li);
 // }
 
-// function recorderProcess(e) {
-//   var left = e.inputBuffer.getChannelData(0);
-//   Stream.write(convertFloat32ToInt16(left));
-// }
+// socket.on('new-recording', function(url){
+//     //var url = data;
+//     makeAudioLink(url);    
+
+// });
+
 </script>
     <p>
         First, select level. (Level 1 is steps and repeated notes only, level 2 includes skips, level 3 a wider range, plus eighth notes.) All other inputs can be left as defaults (or you can select key, time and

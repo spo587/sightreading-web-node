@@ -15,7 +15,7 @@ io.on('connection', function(socket){
         var url = getNewUrl(recordings);
         fs.writeFile(url, blob);
         getRecordingPages(recordings);
-        socket.broadcast.emit('new-recording', url);
+        //socket.broadcast.emit('new-recording', url);
     });
 });
 

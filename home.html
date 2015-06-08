@@ -86,9 +86,9 @@ function initializeRecorder(stream) {
   });
    $('#stop-recording').click(function(){
         recorder.stop();
-        recorder && recorder.exportWAV(function(blob){
-            socket.emit('blob', blob);
-        });
+        // recorder && recorder.exportWAV(function(blob){
+        //     socket.emit('blob', blob);
+        // });
         createDownloadLink();
     });
 }

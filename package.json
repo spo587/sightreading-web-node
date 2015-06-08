@@ -10,8 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "binaryjs": "^0.2.1",
+    "delivery": "0.0.3",
     "express": "^4.12.4",
     "socket.io": "=1.2.0",
+    "socket.io-stream": "^0.8.0",
     "wav": "^1.0.0",
     "wave": "^0.2.3"
   }

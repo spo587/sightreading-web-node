@@ -67,7 +67,7 @@ function transposeVoiceMultipleBars(line_multiple_bars, key, timeSig, major_or_m
     //var timeSig = staffSingleLine.timeSig;
     var beatsPer = Number(timeSig[0]);
     var beat_value = Number(timeSig[2]);
-    console.log(key);
+    //console.log(key);
     var transposedVoices = line_multiple_bars.map(function(singleBar){
         return createTransposedVoice(singleBar, beatsPer, beat_value, key, major_or_minor);
     });
@@ -80,7 +80,7 @@ function transposeVoiceMultipleBars(line_multiple_bars, key, timeSig, major_or_m
 function putLineOnStaff2(line_multiple_bars, staffSingleLine, hand, key, timeSig, major_or_minor, context) {
     var bars_rh = staffSingleLine.bars_rh;
     var bars_lh = staffSingleLine.bars_lh;
-    console.log(line_multiple_bars);
+    //console.log(line_multiple_bars);
     var transposedVoices = transposeVoiceMultipleBars(line_multiple_bars, key, timeSig, major_or_minor)
     if (hand === 'r'){
         transposedVoices.forEach(function(measure, index){
@@ -176,7 +176,7 @@ function decideOctaves2(octaves){
 function setStaff(numBarsPerHand, numPhrases, beatsPerMeasure, beatValue, key, major_or_minor, context, octaves){
     var timeSig = String(beatsPerMeasure) + '/' + String(beatValue);
     var octaves = decideOctaves2(octaves);
-    console.log(octaves);
+    //console.log(octaves);
     //var octavesArray = [octaves['l'], octaves['r']]; //should be ordered left to right
     var clefs = [octaves.rightClef, octaves.leftClef]
     // var reverseClefs = octaves.firstHand === 'l' ? clefsInit.reversed : clefsInit.nonReversed;
@@ -192,7 +192,7 @@ function makeSightReading(numBarsPerHand, numPhrases, beatsPerMeasure, beatValue
     var octavesAndClefsAndBars = setStaff(numBarsPerHand, numPhrases, beatsPerMeasure, beatValue, key, major_or_minor, context, octaves);
     var octaves = octavesAndClefsAndBars.octaves;
     var clefs = octavesAndClefsAndBars.clefs;
-    console.log(clefs);
+    //console.log(clefs);
     var timeSig = octavesAndClefsAndBars.timeSig;
     var emptyBarLines = octavesAndClefsAndBars.emptyBarLines;
     var firstClef = octaves.firstHand === 'r' ? octaves.rightClef : octaves.leftClef;
@@ -240,8 +240,9 @@ function addFingeringFirstNoteOfStaffLines(phrase, measureNumber, emptyBarLines,
     //measurenumber = 7, barsperstaffline = 6
     var newLineMeasureNumber = barsPerStaffLine - (measureNumber % barsPerStaffLine);
     if (newLineMeasureNumber !== 0 && newLineMeasureNumber < phraseLength){
+        console.log('first note of staff line function');
         //onsole.log(phrase.not[newLineMeasureNumber])
-        console.log(phrase.notes[newLineMeasureNumber][0]);
+        //console.log(phrase.notes[newLineMeasureNumber][0]);
         addFingering(phrase.notes[newLineMeasureNumber][0], decideFingering(phrase.steps[newLineMeasureNumber][0], hand, highestScaleDegree));
     }
 }
@@ -256,7 +257,7 @@ function makeRandomSightreading(level, numPhrases, standardFiveFingerOrNot, cont
     var highestScaleDegrees = decideHighFingerChoice(standardFiveFingerOrNot, keyObject);
     //console.log(highestScaleDegrees);
     var octaveChoice = octaves === true ? [3,4] : undefined;
-    console.log(octaveChoice);
+    //console.log(octaveChoice);
     return makeSightReading(numbars, numPhrases, timeSig.beatsPerMeasure, timeSig.beatValue, keyObject.key, level, keyObject.major_or_minor, highestScaleDegrees[0], highestScaleDegrees[1], context, octaveChoice);
 }
 

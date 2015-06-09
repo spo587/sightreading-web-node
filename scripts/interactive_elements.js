@@ -15,27 +15,13 @@ function clearCanvas(context) {
 var STOREEXAMPLE = []; //oh dear a global variable, not good i know
 var TIMESCALLED = 0;
 
-function forEachIn(object, func) {
-    for (var property in object) {
-        if (object.hasOwnProperty(property))
-            func(property, object[property])
-    }
-}
 
 function makeExample(context, level, numPhrases, beatsPerMeasure, beatValue, key, major_or_minor, standardFiveFingerOrNot, octaves) {
     clearCanvas(context);
     //clearCanvas(context2)
-    
     var example = makeRandomSightreading(level, numPhrases, standardFiveFingerOrNot, context, key, major_or_minor, beatsPerMeasure, beatValue, octaves)
-    // console.log(example);
-    // var example2 = {};
-    // forEachIn(example, function(prop, val){
-    //     var string = String(prop);
-    //     socket.emit('sightreading-example', {string: val});
-    // }); 
-     
     //var example1 = makeRandomSightreading(level, standardFiveFingerOrNot, context);
-    //var beatsPerExample1 = example.beatsPerMeasure;
+    var beatsPerExample1 = example.beatsPerMeasure;
     //var example2 = makeRandomSightReading(4, level, 4, 10, context2, standardFiveFingerOrNot);
     //var beatsPerExample2 = example2.beatsPer;
     //scrollHandler(beatsPerExample1, example.numLines, example.barsPerLine * 230 + 50, context);
@@ -58,9 +44,6 @@ $('#submit').click(function(){
     var beatValue = 4;
     var octaves = Boolean($('input[name=octave]:checked', '#octave-range').val());
     makeExample(ctx, level, numPhrases, beatsPerMeasure, beatValue, key, major_or_minor, standardFiveFingerOrNot, octaves)
-    var img = ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height);
-    //var stream = client.createStream({file: })
-    //socket.emit('sightreading-example', img);
     // makeSightReading(4, numPhrases, beatsPerMeasure, 4, 0, level, 'M', 4, 4, ctx);
     // var params = setParameters(params);
     // clearCanvas(ctx);

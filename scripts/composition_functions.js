@@ -5,23 +5,16 @@
 //let's take a top-down approach
 
 
-function makeHarmonyLevel4(level3Line){
-    //grab the melody 2-dimensional array
-    var melody = line.melody;
-    
-}
-
-
 function makeLineRhythmsFirst(beatsPerMeasure, numMeasures, level, highestScaleDegree, open_or_closed){
     //this function will make rhythms and melody notes separately, as my current system does.
     //we'll make separate high level functions for the other way around and different combos
-    console.log(open_or_closed);
+    //console.log(open_or_closed);
     var rhythms = generateRhythms(beatsPerMeasure, numMeasures, level)
     var length = findLength(rhythms)
     if (level === 3){
         var randomMelody = makeRandomMelody(undefined, length, highestScaleDegree, open_or_closed);
         var melodyNotesInts = VNS(randomMelody, 3, 2).scaleDegrees;
-        console.log(melodyNotesInts);
+        //console.log(melodyNotesInts);
         var melodyNotes = melodyNotesInts.map(function(current){
             return String(current);
         });
@@ -30,7 +23,7 @@ function makeLineRhythmsFirst(beatsPerMeasure, numMeasures, level, highestScaleD
     else {
         var melodyNotes = generateMelody(length, level, highestScaleDegree, open_or_closed);
     }
-    //console.log(melodyNotes);
+    ////console.log(melodyNotes);
     var melodyNotesNested = nestArray(rhythms, melodyNotes);
     var rhythmsMelodyTogether = combineArray(rhythms, melodyNotes)
     return {rhythms: rhythms, melody: melodyNotesNested, together: rhythmsMelodyTogether};
@@ -54,31 +47,17 @@ function generateRhythms(beatsPerMeasure, numMeasures, level){
     return rhythms;
 }
 
-function generateRhythmsQuarterNotesOnly(beatsPerMeasure, numMeasures){
-    var rhythms = [];
-    for (var i=0; i<numMeasures; i += 1){
-        rhythms.push([]);
-        var beat = 0;
-        while (beat < beatsPerMeasure) {
-            var next = 1;
-            rhythms[i].push(durationToVex(next, beatsPerMeasure));
-            beat += next;
-        }
-    }
-    return rhythms;
-}
-
 function generateNextRhythm(beatsPerMeasure, currentBeat, level){
     var shortestDurationDict = {1:1, 2:1, 3:0.5};
     var longestDuration = nextHierarchicBeat2(beatsPerMeasure, currentBeat);
     var possibles = range(longestDuration, shortestDurationDict[level]);
-    //console.log(possibles);
+    ////console.log(possibles);
     //change weights?
     randNumWeighted = Math.pow(Math.random(), 1.3);
     var duration = possibles[Math.floor(randNumWeighted * possibles.length)];
     /// not ready for ties quite yet, change this to deal with ties later
     if (duration != 2.5 && duration != 3.5 && duration != 4 && duration != 0) {
-        //console.log(duration);
+        ////console.log(duration);
         return duration;
     }
     else {
@@ -121,7 +100,7 @@ function generateMelody(length, level, highestScaleDegree, open_or_closed){
     var max = arrayMax(notes);
     var min = arrayMin(notes);
     while (max - min < 3){
-        //console.log('looping through makemelody again');
+        ////console.log('looping through makemelody again');
         notes = makeMelodyAnyLevel(length - 1, level, highestScaleDegree).scaleDegrees;
         max = arrayMax(notes);
         min = arrayMin(notes);
@@ -131,7 +110,7 @@ function generateMelody(length, level, highestScaleDegree, open_or_closed){
     })
 
     if (open_or_closed ===  'closed'){
-        console.log('reversing');
+        //console.log('reversing');
         notes.reverse();
     }
     return notes;
@@ -141,7 +120,7 @@ function makeMelodyAnyLevel(lengthLessOne, level, highestScaleDegree, melody){
     //level three only supports normal five finger position yet
     if (melody === undefined){
         var firstTonic = highestScaleDegree <= 4 ? 0 : 2;
-        //console.log(firstTonic);
+        ////console.log(firstTonic);
         var melody = {scaleDegrees: [firstTonic], intervals: [], intervalCounts: {step:0, skip:0, leap:0, repeat:0}, fifthDegreePosition: randomIntFromInterval(1,length)}
     }
     if (lengthLessOne === 0){
@@ -165,7 +144,7 @@ function chooseNextScaleDegree(melody, level, highestScaleDegree){
     //level 1 or 2 only
     //highest scale degree as an int, 4 for 5th scale degree
     var fiveFingerNotes = rangeBetter(highestScaleDegree - 4, 5, 1);
-    //console.log(fiveFingerNotes)
+    ////console.log(fiveFingerNotes)
     var lastScaleDegree = melody.scaleDegrees[melody.scaleDegrees.length - 1];
     var up = lastScaleDegree < highestScaleDegree ? stepsAway(level) : 0;
     var down = lastScaleDegree > highestScaleDegree - 4 ? - stepsAway(level) : 0;
@@ -174,7 +153,7 @@ function chooseNextScaleDegree(melody, level, highestScaleDegree){
     var choices = arrayUnique([stay, up, down]);
     var randNumWeighted = Math.pow(Math.random(), 0.4);
     var change = choices[Math.floor(randNumWeighted * choices.length)];
-    //console.log(change);
+    ////console.log(change);
     var nextScaleDegree = lastScaleDegree + change;
     if (fiveFingerNotes.indexOf(nextScaleDegree) > -1){
         melody.scaleDegrees.push(nextScaleDegree);

@@ -85,14 +85,14 @@ function addTimeSignature(singleLine, timeSig){
 
 function addKeySignature(singleLine, key){
     var keySig = new SharpMajorScale(key).tonic;
-    console.log(keySig);
+    //console.log(keySig);
     singleLine.bars_rh[0].addKeySignature(keySig);
     singleLine.bars_lh[0].addKeySignature(keySig);
     return singleLine;
 }
 
 function addKeyAndTimeSignature(multipleLines, timeSig, key){
-    console.log(key);
+    //console.log(key);
     multipleLines.forEach(function(line){
         addKeySignature(line, key)
     });
@@ -157,11 +157,14 @@ function createSingleNote(chroma, octave, accidental, duration, clef, fingering)
 }
 
 function newStringNumber(num, pos) {
+    console.log(num);
+    console.log(pos);
         return new Vex.Flow.StringNumber(num).setPosition(pos);
     }
 
 function addFingering(note, fingering){
-    note.addModifier(0, newStringNumber(fingering, Vex.Flow.Modifier.Position.ABOVE))
+    note.addModifier(0, newStringNumber(fingering, Vex.Flow.Modifier.Position.ABOVE));
+    console.log(note);
 }
 
 
@@ -180,7 +183,7 @@ function createVoice(notes, numbeats, beat_value) {
 
 function createTransposedVoice(notes, numbeats, beat_value, key, major_or_minor){
     var scale = major_or_minor === 'M' ? new SharpMajorScale(key) : new SharpMinorScale(key);
-    console.log(key);
+    //console.log(key);
     return transposeVoice(createVoice(notes, numbeats, beat_value), 0, key, 'M', major_or_minor);
 }
 

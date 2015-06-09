@@ -98,6 +98,7 @@ function getRecordingPages(recordings){
 
 
 var scripts = ['utilities/head.min.js', 'utilities/jquery.js', 'scripts/vexflow-min.js',
+            'scripts/vexflow-debug.js',
             'scripts/recorder.js',
             'scripts/recorderWorker.js',
             'scripts/VNSrhythms.js',

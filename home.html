@@ -5,7 +5,7 @@
     <script src="/node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
     <script>
     head.js('utilities/jquery.js',
-            'scripts/vexflow-min.js',
+            'scripts/vexflow-debug.js',
             'scripts/recorder.js',
             'scripts/recorderWorker.js',
             'scripts/VNSrhythms.js',
@@ -34,12 +34,7 @@
         <h2> (Designed for use on a tablet computer in Chrome, Safari or Firefox. Do not attempt use with Internet Explorer.) </h2>
 
     </header>
-    <h2>Recordings</h2>
-  <ul id="recordingslist"></ul>
-  
-  <h2>Log</h2>
-    <p id='log-par'> <button type='button' id='start-recording'>click here to start recording </button>
-    <p> <button type='button' id='stop-recording'>click here to stop recording </button>
+     
     <script>
     var socket = io('/');
     var session = {
@@ -66,8 +61,9 @@ function initializeRecorder(stream) {
   });
    $('#stop-recording').click(function(){
         recorder.stop();
-        sendBufferData();
-        window.setTimeout(createDownloadLink, 1000);
+        createDownloadLink();
+        window.setTimeout(sendBufferData,1000);
+        //window.setTimeout(createDownloadLink, 1000);
     });
 }
 
@@ -161,6 +157,13 @@ function sendBufferData(){
         
     <button type='button' id='button-1'>start!</button>
     <button type= 'button' id='stop-start-over-1'> let's go back and try that again, shall we</button>
+    <h2>Recordings</h2>
+  <ul id="recordingslist"></ul>
+  
+  <h2>Log</h2>
+    <p id='log-par'> <button type='button' id='start-recording'>click here to start recording </button>
+    <p> <button type='button' id='stop-recording'>click here to stop recording </button>
+
     <audio src="https://dl.dropboxusercontent.com/u/95890750/vexflow_sightreading/sounds/10211%5ERVBCLICK.mp3" type='audio/mpeg' id="click" autostart="false"></audio>
     
     <p class='timer'> countdown:   </p>

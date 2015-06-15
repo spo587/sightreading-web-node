@@ -94,8 +94,18 @@ function getRecordingPages(recordings){
     });
 }
 
+var midiIncShimScripts = ['Base64.js', 'Base64binary.js', 'WebAudioApi.js'];
 
+var midijsmidisscripts = ['audioDetect.js','gm.js','loader.js','plugin.audiotag.js',
+    'plugin.webaudio.js', 'plugin.webmidi.js'];
 
+midiIncShimScripts.forEach(function(script){
+    appGet('/' + script, '/midijs/inc/shim/' + script);
+});
+
+midijsmidisscripts.forEach(function(script){
+    appGet('/' + script, '/midijs/js/midi/' + script);
+});
 
 var scripts = ['utilities/head.min.js', 'utilities/jquery.js', 'scripts/vexflow-min.js',
             'scripts/vexflow-debug.js',
@@ -112,13 +122,19 @@ var scripts = ['utilities/head.min.js', 'utilities/jquery.js', 'scripts/vexflow-
             'scripts/vexflow_objects.js',
             'scripts/music_on_canvas_functions.js',
             'scripts/interactive_elements.js',
-            'node_modules/socket.io/node_modules/socket.io-client/socket.io.js'];
+            'node_modules/socket.io/node_modules/socket.io-client/socket.io.js',
+            'scripts/midiFunctions.js'];
 
 scripts.forEach(function(script){
     appGet('/' + script, '/' + script);
 });
 
+appGet('/dom_request_xhr.js','/midijs/js/util/dom_request_xhr.js');
+appGet('/dom_request_script.js','/midijs/js/util/dom_request_script.js');
 
+appGet('/soundFont/acoustic_grand_piano-ogg.js','/midijs/examples/soundFont/acoustic_grand_piano-ogg.js')
+
+appGet('/miditest.html','/midijs/examples/Basic.html');
 
 appGet('/', '/home.html');
 

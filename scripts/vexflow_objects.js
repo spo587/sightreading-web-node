@@ -258,7 +258,7 @@ function generateLine(rhythms_nested, steps_nested, octave, clef) {
     });
 
     addFingeringFirstNoteOfLine(notes, steps_nested, clef);
-    return {notes: notes, steps: steps_nested};
+    return {notes: notes, steps: steps_nested, rhythms: rhythms_nested};
 }
 
 function convert(scaleDegree, highestScaleDegree){

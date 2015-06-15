@@ -215,7 +215,7 @@ function makeSightReading(numBarsPerHand, numPhrases, beatsPerMeasure, beatValue
         var currentHand = handOrder[index].hand;
         var currentClef = handOrder[index].clef;
         return generateLine(currentVal.rhythms, currentVal.melody, octaves[currentHand], currentClef, numBarsPerHand);
-    })
+    });
     var measureCounter = 0;
     phrases.forEach(function(phrase, index){
         addFingeringFirstNoteOfLine(phrase.notes, phrase.steps, handOrder[index].hand, handOrder[index].highestScaleDegree);
@@ -229,7 +229,7 @@ function makeSightReading(numBarsPerHand, numPhrases, beatsPerMeasure, beatValue
     return {beatsPerMeasure: beatsPerMeasure, numBarsPerHand: numBarsPerHand, 
         beatValue: beatValue, key: key, major_or_minor: major_or_minor, timeSig: timeSig,
         phrases: phrases, clefs: clefs, firstHand: firstHand, secondHand: secondHand, handOrder: handOrder, numPhrases: numPhrases,
-        numLines: emptyBarLines.length, barsPerLine: emptyBarLines[0].bars_rh.length};
+        numLines: emptyBarLines.length, barsPerLine: emptyBarLines[0].bars_rh.length, octaves: octaves};
 }
 
 function addFingeringFirstNoteOfStaffLines(phrase, measureNumber, emptyBarLines, hand, highestScaleDegree){

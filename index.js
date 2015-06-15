@@ -94,7 +94,7 @@ function getRecordingPages(recordings){
     });
 }
 
-var midiIncShimScripts = ['Base64.js', 'Base64binary.js', 'WebAudioApi.js'];
+var midiIncShimScripts = ['Base64.js', 'Base64binary.js', 'WebAudioAPI.js'];
 
 var midijsmidisscripts = ['audioDetect.js','gm.js','loader.js','plugin.audiotag.js',
     'plugin.webaudio.js', 'plugin.webmidi.js'];
@@ -132,7 +132,7 @@ scripts.forEach(function(script){
 appGet('/dom_request_xhr.js','/midijs/js/util/dom_request_xhr.js');
 appGet('/dom_request_script.js','/midijs/js/util/dom_request_script.js');
 
-appGet('/soundFont/acoustic_grand_piano-ogg.js','/midijs/examples/soundFont/acoustic_grand_piano-ogg.js')
+appGet('/soundfont/acoustic_grand_piano-ogg.js','/midijs/examples/soundfont/acoustic_grand_piano-ogg.js')
 
 appGet('/miditest.html','/midijs/examples/Basic.html');
 

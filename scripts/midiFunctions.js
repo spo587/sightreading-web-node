@@ -121,7 +121,7 @@ $('#playMidi').click(function(){
 function convertToNote(scaleDegree, key, major_or_minor, octave){
     //scaleDegree = Number(scaleDegree);
     var scale = major_or_minor === 'm' ? new SharpMinorScale(key) : new SharpMajorScale(key);
-    return octave * 12 + Number(key) + 5 + Number(scale.scaleStepsToHalfSteps[scaleDegree]);
+    return octave * 12 + Number(key) - 3 + Number(scale.scaleStepsToHalfSteps[scaleDegree]);
     
 }
 

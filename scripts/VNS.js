@@ -3,6 +3,9 @@
 // counterpoint, add 2nd line for next level
 
 
+Math.sign = function(num){
+    return num >=0 ? 1 : -1
+}
 
 function makeRandomMelody(melody, remainingLength, highestScaleDegree, open_or_closed){
     if (melody === undefined){

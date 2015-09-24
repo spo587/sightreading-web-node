@@ -28,7 +28,7 @@ var ctx = makeContext('canvas-1');
 
 
 
-function renderBars(barsSingleLine, context) {
+function renderBars(barsSingleLine, context, end) {
     //put bars oon canvas and add connectors and shit
     var bars_rh = barsSingleLine.bars_rh;
     var bars_lh = barsSingleLine.bars_lh;
@@ -39,6 +39,10 @@ function renderBars(barsSingleLine, context) {
         bar.setContext(context).draw();
         bars_lh[index].setContext(context).draw();
     });
+    if (end === true){
+        console.log(bars_rh.length - 1);
+        addDoubleBar(bars_rh[bars_rh.length - 1], bars_lh[bars_lh.length - 1], context);
+    }
 }
 
 function setFirstBarConnectors(rh_bar, lh_bar, context){
@@ -57,10 +61,17 @@ function addLeftandRightConnector(rh_bar, lh_bar, context){
     right.setContext(context).draw();
 }
 
+function addDoubleBar(rh_bar, lh_bar, context){
+    var r = new Vex.Flow.StaveConnector(rh_bar, lh_bar);
+    r.setType(Vex.Flow.StaveConnector.type.BOLD_DOUBLE_RIGHT);
+    r.setContext(context).draw();
+}
+
 function renderBarsMultipleLines(lines, context) {
-    for (var i=0; i<lines.length; i+=1) {
+    for (var i=0; i<lines.length - 1; i+=1) {
         renderBars(lines[i], context);
     }
+    renderBars(lines[lines.length - 1], context, true);
 }
 
 function transposeVoiceMultipleBars(line_multiple_bars, key, timeSig, major_or_minor) {

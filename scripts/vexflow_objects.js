@@ -157,14 +157,11 @@ function createSingleNote(chroma, octave, accidental, duration, clef, fingering)
 }
 
 function newStringNumber(num, pos) {
-    console.log(num);
-    console.log(pos);
         return new Vex.Flow.StringNumber(num).setPosition(pos);
     }
 
 function addFingering(note, fingering){
     note.addModifier(0, newStringNumber(fingering, Vex.Flow.Modifier.Position.ABOVE));
-    console.log(note);
 }
 
 
@@ -305,6 +302,5 @@ function decideFingering(step, hand, highestScaleDegree){
     else {
         var fingering = fingerConverter_lh[convert(step, highestScaleDegree)];
     }
-    console.log(fingering);
     return fingering;
 }

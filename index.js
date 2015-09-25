@@ -29,7 +29,7 @@ io.on('connection', function(socket){
         fs.writeFile(txtfile, blob);
         getRecordingPages(recordings);
         appGet('/wav-file.txt', '/wav-file.txt');
-        //socket.broadcast.emit('new-recording', url);
+        socket.broadcast.emit('new-recording', url);
     });
     socket.on('buffer', function(buffer){
         var obj = buffer[0];
@@ -45,8 +45,6 @@ io.on('connection', function(socket){
             var note = pd.noteFromPitch(freq);
             console.log(note);
         });
-        // var cor = autoCorrelate(arr, 44100);
-        // console.log(cor);
     });
 });
 
@@ -66,15 +64,6 @@ function forEachIn(object, func) {
     }
 }
 
-
-
-// function getNewUrl(recordings, socket){
-//     var len = recordings.length;
-//     var str = 'test' + String(len + 1);
-//     var url = str + '.wav';
-//     recordings.push(url);
-//     return url;
-// }
 
 function appGet(urlPath, fileExtension){
     app.get(urlPath, function(req, res){

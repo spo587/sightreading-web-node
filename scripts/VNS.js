@@ -112,9 +112,9 @@ function numDirectionChanges(current, scaleDegrees){
     }
     else {
         if (Math.sign(scaleDegrees[1] - scaleDegrees[0]) !== Math.sign(scaleDegrees[2] - scaleDegrees[1])){
-            current += 1
+            current += 1;
         }
-        return numDirectionChanges(current, scaleDegrees.slice(1))
+        return numDirectionChanges(current, scaleDegrees.slice(1));
     }
 }
 // function noteRepScore(scaleDegrees){

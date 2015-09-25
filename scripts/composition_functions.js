@@ -1,5 +1,5 @@
 // //the next three functions are some very basic composing algorithms based on scale degrees. 
-// // nothing exciting here
+
 
 
 //let's take a top-down approach
@@ -71,7 +71,7 @@ function nextHierarchicBeat2(beatsPer, currentBeat){
     //for instance on beat 2, the next level a beat 'up' is the next downbeat, 2 beats away
     //on an eighth note beat, like 0.5 or 1.5 , the next beat is a half note, or 0.5 beats, away.
     var divider = beatsPer % 3 === 0 ? 3 : 2;
-    if (currentBeat === 0){
+    if (currentBeat % beatsPer === 0){
         return beatsPer;
     }
     else {

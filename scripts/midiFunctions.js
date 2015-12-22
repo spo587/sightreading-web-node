@@ -4,10 +4,10 @@ var TIME;
 window.onload = function () {
     TIME = new Date().getTime();
     MIDI.loadPlugin({
-        soundfontUrl: "./soundfont/",
+        soundfontUrl: "./soundfont",
         instrument: "acoustic_grand_piano",
         onprogress: function(state, progress) {
-            console.log(state, progress);
+            //console.log(state, progress);
         },
         onsuccess: function() {
             //playNote(60,0);

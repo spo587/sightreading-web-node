@@ -5,7 +5,7 @@ window.onload = function () {
     TIME = new Date().getTime();
     MIDI.loadPlugin({
 
-        soundfontUrl: "./soundfont",
+        soundfontUrl: "./soundfont/",
 
         instrument: "acoustic_grand_piano",
         onprogress: function(state, progress) {

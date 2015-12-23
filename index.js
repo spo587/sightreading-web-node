@@ -6,7 +6,7 @@ var server = require('http').createServer(app);
 //var wav = require('wav');
 var io = require('socket.io')(server);
 var pd = require('./pitchDetect');
-//var dl = require('delivery');
+//var dl = require('delivery')
 
 
 io.on('connection', function(socket){
@@ -21,14 +21,14 @@ io.on('connection', function(socket){
       // });
         var name = data.name;
         var url = name + String(new Date().getTime()) + '.wav';
-        var txtfile = 'wav-file.txt';
+        //var txtfile = 'wav-file.txt';
 
         recordings.push(url);
         console.log(url);
         fs.writeFile(url, blob);
-        fs.writeFile(txtfile, blob);
+        //fs.writeFile(txtfile, blob);
         getRecordingPages(recordings);
-        appGet('/wav-file.txt', '/wav-file.txt');
+        //appGet('/wav-file.txt', '/wav-file.txt');
         socket.broadcast.emit('new-recording', url);
     });
     socket.on('buffer', function(buffer){
